@@ -1,7 +1,7 @@
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Task
+from .serializers import UserSerializer, TaskSerializer
 
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -13,3 +13,11 @@ class UserProfileView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class TaskViewSet(viewsets.ModelViewSet):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save()
