@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import User, Task
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,3 +14,11 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+    
+class TaskSerializer(serializers.ModelSerializer):
+    assignee = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), allow_null=True)
+
+    class Meta:
+        model = Task
+        fields = ['id', 'title', 'description', 'assignee', 'status', 'deadline', 'created_at', 'updated_at']
+        read_only_fields = ['created_at', 'updated_at']
