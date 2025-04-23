@@ -6,4 +6,5 @@ A web-based platform for task creation, assignment, and tracking with AI-driven 
 - Run `python manage.py runserver` to start
 ## Features
 - User signup/login with JWT authentication
-- APIs: `/api/signup/`, `/api/token/`, `/api/profile/`
+- Task CRUD operations
+- APIs: `/api/signup/`, `/api/token/`, `/api/profile/`, `/api/tasks/`, `/api/tasks/<id>/`
