@@ -1,14 +1,13 @@
 from celery import shared_task
-from django.core.mail import send_mail
+
+print("Loading send_task_update_notification task")  # Debug
 
 @shared_task
 def send_task_update_notification(task_id):
-    print(f"Task {task_id} has been updated!")
-    # Optionally, send an email (configure email backend in settings.py)
-    # send_mail(
-    #     'Task Updated',
-    #     f'Task {task_id} has been updated.',
-    #     'from@example.com',
-    #     ['to@example.com'],
-    #     fail_silently=False,
-    # )
+    try:
+        print(f"Starting task for task_id: {task_id}")  # Debug
+        print(f"Task {task_id} has been updated!")
+        print(f"Completed task for task_id: {task_id}")  # Debug
+    except Exception as e:
+        print(f"Error in send_task_update_notification for task_id {task_id}: {str(e)}")
+        raise  # Re-raise to ensure Celery logs the error

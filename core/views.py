@@ -20,9 +20,24 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
 
+    # def perform_create(self, serializer):
+    #     instance = serializer.save()
+    #     send_task_update_notification.delay(instance.id)  # Notify on creation
+
+    # def perform_update(self, serializer):
+    #     instance = serializer.save()
+    #     send_task_update_notification.delay(instance.id)  # Notify on update
+
     def perform_create(self, serializer):
-        serializer.save()
+        print("Performing task creation")  # Debug
+        instance = serializer.save()
+        print(f"Task created with ID: {instance.id}")  # Debug
+        send_task_update_notification.delay(instance.id)
+        print("Task notification queued for creation")  # Debug
 
     def perform_update(self, serializer):
+        print("Performing task update")  # Debug
         instance = serializer.save()
+        print(f"Task updated with ID: {instance.id}")  # Debug
         send_task_update_notification.delay(instance.id)
+        print("Task notification queued for update")  # Debug
