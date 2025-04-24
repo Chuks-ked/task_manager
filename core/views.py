@@ -2,6 +2,7 @@ from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from .models import User, Task
 from .serializers import UserSerializer, TaskSerializer
+from .tasks import send_task_update_notification
 
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -21,3 +22,7 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        send_task_update_notification.delay(instance.id)
