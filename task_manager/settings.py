@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7mpq0ibcitx3*w@1z3!k4hjgf+slzbqc@!j92u9vwh)!2n*&_j'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -77,23 +78,34 @@ WSGI_APPLICATION = 'task_manager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASES = {
+# Development Configuration (Postgres)
+if config('ENVIRONMENT', default='development') == 'development':
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'task_db',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+# Production Configuration (MySQL)
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='3306'),
+            'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',
+            'charset': 'utf8mb4',
+            }
+        }
+    }
 
 
 # Password validation
@@ -140,6 +152,30 @@ STATIC_ROOT = BASE_DIR / "staticfiles"  # For collectstatic in production
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# email smtp settings
+if config('ENVIRONMENT', default='development') == 'development':
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER="chuksoclock@gmail.com"
+    EMAIL_HOST_PASSWORD = config('DEV_EMAIL_HOST_PASSWORD')
+    WEBSITE_ADMIN_EMAILS = ['michaelbezos4u@gmail.com']
+    INFO_ADMIN_EMAIL = ['michaelbezos4u@gmail.com']
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "domain.com"
+    EMAIL_PORT = 465 
+    EMAIL_USE_SSL = True
+    EMAIL_HOST_USER = "support@group.com"
+    EMAIL_HOST_PASSWORD = config('PROD_EMAIL_HOST_PASSWORD')
+
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+    WEBSITE_ADMIN_EMAILS = ['admin@group.com']
+    INFO_ADMIN_EMAIL = ['info@group.com']
 
 
 AUTH_USER_MODEL = 'core.User'
