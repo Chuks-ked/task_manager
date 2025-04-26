@@ -144,9 +144,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Optional: If you have a local static directory
+    BASE_DIR / "static",
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"  # For collectstatic in production
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -156,16 +156,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # email smtp settings
 if config('ENVIRONMENT', default='development') == 'development':
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-    # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    # EMAIL_HOST = "smtp.gmail.com"
-    # EMAIL_PORT = 587
-    # EMAIL_USE_TLS = True
-    # EMAIL_HOST_USER="chuksoclock@gmail.com"
-    # EMAIL_HOST_PASSWORD = config('DEV_EMAIL_HOST_PASSWORD')
-    # WEBSITE_ADMIN_EMAILS = ['michaelbezos4u@gmail.com']
-    # DEFAULT_EMAIL = ['michaelbezos4u@gmail.com']
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER="chuksoclock@gmail.com"
+    EMAIL_HOST_PASSWORD = config('DEV_EMAIL_HOST_PASSWORD')
+    WEBSITE_ADMIN_EMAILS = ['michaelbezos4u@gmail.com']
+    DEFAULT_FROM_EMAIL = ['michaelbezos4u@gmail.com']
 else:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = "domain.com"
