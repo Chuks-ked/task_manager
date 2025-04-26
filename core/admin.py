@@ -20,5 +20,15 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
-    
-admin.site.register(Task)
+@admin.register(Task)
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('title', 'assignee', 'status', 'deadline', 'created_at', 'updated_at')
+    list_filter = ('status', 'deadline')
+    search_fields = ('title', 'description')
+    date_hierarchy = 'deadline'
+    actions = ['mark_as_completed']
+
+    def mark_as_completed(self, request, queryset):
+        queryset.update(status='completed')
+        self.message_user(request, "Selected tasks have been marked as completed.")
+    mark_as_completed.short_description = "Mark selected tasks as completed"
