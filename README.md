@@ -85,6 +85,7 @@ python manage.py collectstatic
 
 ### 🌍 Public Tasks
 - `GET /api/public/tasks/<id>/` – View a public task without login
+- `GET /api/public/tasks/<id>/status/` – View a public task status without login
 
 ---
 
