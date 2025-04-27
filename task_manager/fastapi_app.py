@@ -5,7 +5,6 @@ from django.core.cache import cache
 from core.models import Task
 from core.serializers import TaskSerializer
 
-print("Creating FastAPI app")
 app = FastAPI()
 
 @app.get("/test/")

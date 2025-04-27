@@ -37,12 +37,10 @@ class TaskViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         send_task_update_notification.delay(instance.id)
-        # invalidate cache on create
         cache.delete(f'task_list_{self.request.user.id}')
 
     def perform_update(self, serializer):
         instance = serializer.save()
         send_task_update_notification.delay(instance.id)
-        # invalidate cache on create
         cache.delete(f'task_list_{self.request.user.id}')
 
