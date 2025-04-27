@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import User, Task
 from .serializers import UserSerializer, TaskSerializer
 from .tasks import send_task_update_notification
+from .permissions import IsAssigneeOrReadOnly
 
 class UserCreateView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -19,7 +20,7 @@ class UserProfileView(generics.RetrieveAPIView):
 class TaskViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAssigneeOrReadOnly]
 
     def get_queryset(self):
         # Cache the task list for the authenticated user
