@@ -22,12 +22,14 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        # Cache the task list for the authenticated user
         user = self.request.user
         cache_key = f'task_list_{user.id}'
         cached_tasks = cache.get(cache_key)
         if cached_tasks is not None:
             return cached_tasks
 
+        # If not cached, fetch from database and cache
         tasks = Task.objects.filter(assignee=user).select_related('assignee')
         cache.set(cache_key, tasks, timeout=60 * 15)
         return tasks

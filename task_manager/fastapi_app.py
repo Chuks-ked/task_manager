@@ -30,6 +30,3 @@ async def get_public_task(task_id: int):
         return task_data
     except Task.DoesNotExist:
         raise HTTPException(status_code=404, detail="Task not found")
-
-
-print("FastAPI app setup completed")
