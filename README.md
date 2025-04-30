@@ -66,7 +66,12 @@ python manage.py collectstatic
   ```bash
   celery -A task_manager worker --loglevel=info
   ```
-
+- **Running the Application:**
+  To start or stop all services (Celery worker and Uvicorn server), use the provided shell script:
+  ```bash
+  ./start_services.sh
+  ./stop_services.sh
+  ```
 ---
 
 ## 🚪 API Endpoints
